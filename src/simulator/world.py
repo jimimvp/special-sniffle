@@ -15,10 +15,6 @@ class Street:
                 self.traveling_cars.remove(car)
                 self.queueing_cars.append(car)
 
-        if self.intersection_end.traffic_light[self.name] is True:
-            car = self.queueing_cars.pop(0)
-            car.cross_intersection()
-            
 class Intersection:
     def __init__(self, *, id):
         self.identifier = id
@@ -39,21 +35,21 @@ class Intersection:
             self.counter = 0
 
         # let car out
-        car = self.in_streets[self.curr_green].pop()
-        self.in_streets.step()
-        
-        if car.remaining_route:
-            car.current_street = car.remaining_route.pop(0)
+        street = self.in_streets[self.curr_green]
+        car = street.queueing_cars.pop(0)
+        car.cross_intersection()
 
         self.counter += 1
 
 class Car:
     def __init__(self, *, identifier, total_route):
         self.identifier = identifier
-        self.current_street = []
+        self.current_street = total_route[0]
         self.total_route = total_route
-        self.remaining_route = []
+        self.remaining_route = total_route[1:]
         self.remaining_traveling_time = 1
+
+        self.current_street.traveling_cars.append(self)
 
     def cross_intersection(self):
         next_street = self.remaining_route.pop(0)
@@ -66,7 +62,6 @@ class Car:
 class World:
     def __init__(self, *, config):
         self.config = config
-        self.build()
 
         self.intersections = dict()
         self.streets = dict()
@@ -75,7 +70,7 @@ class World:
     def build(self):
 
         # Generate Intersections
-        for id in self.config.num_intersections:
+        for id in range(self.config.num_intersections):
             self.intersections[id] = Intersection(id=id)
 
         # Generate Streets
@@ -86,12 +81,20 @@ class World:
                             T=street.T)
             self.streets[street.name] = street
 
-            self.intersections[street.intersection_start].out_streets.append(street)
-            self.intersections[street.intersection_end].in_streets.append(street)
+            self.intersections[street.intersection_start.identifier].out_streets.append(street)
+            self.intersections[street.intersection_end.identifier].in_streets.append(street)
 
         # Generate Cars
-        for id in self.config.num_cars:
+        for id in range(self.config.num_cars):
+            total_route = [self.streets[name] for name in self.config.cars[id].total_route]
             car = Car(identifier=id,
-                      total_route=self.config.cars[id].plan)
+                      total_route=total_route)
                     
             self.cars[id] = car
+
+    def step(self):
+        for street in self.streets:
+            street.step()
+
+        for intersection in self.intersections:
+            intersection.step()

@@ -14,8 +14,8 @@ class Config(object):
 
 
 
-Street = namedtuple("Street", field_names=["name", "intersection_in", "intersection_out", "T"])
-Car = namedtuple("Car", field_names=["path"])
+Street = namedtuple("Street", field_names=["name", "intersection_start", "intersection_end", "T"])
+Car = namedtuple("Car", field_names=["total_route"])
 
 
 def load_data(file):

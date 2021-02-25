@@ -3,12 +3,12 @@ from .world import World
 
 class Simulator:
 
-    def __init__(self, config):
+    def __init__(self, *, config, world):
         self.config = config
-        self.world = World(config)
+        self.world = world
 
-    def loop(self):
+    def start_loop(self):
     
-        for t in tqdm.tqdm(self.config.simulation_duration):
-            pass
+        for t in tqdm.tqdm(range(self.config.simulation_duration)):
+            self.world.step()
     

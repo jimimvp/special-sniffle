@@ -53,8 +53,10 @@ class Intersection:
                 street.queueing_cars[0].just_arrived_at_intersection = False
             else:
                 car = street.queueing_cars.pop(0)
-                car.cross_intersection()
-
+            prev_done = car.done
+            car.cross_intersection()
+            if car.done and not prev_done:
+                car.finish_time = t
 
         self.inner_counter += 1
 
@@ -66,6 +68,7 @@ class Car:
         self.remaining_route = total_route[1:]
         self.remaining_traveling_time = 0
         self.just_arrived_at_intersection = False
+        self.finish_time = None
 
         self.current_street.queueing_cars.append(self)
 

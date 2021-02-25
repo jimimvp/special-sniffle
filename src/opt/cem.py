@@ -25,18 +25,23 @@ def simulate_sol(traffic_lights, config):
         i+=len(intersection.in_streets)
     
     simulator.start_loop(verbose=False)
-    
+
+    finishing_times = []
+    for car in world.cars:
+        if car.done:
+            finishing_times.append(car.finish_time)
+
+
 
 def sample_trajectories(traffic_lights, config):
 
 
-
+    res = []
     for tf in traffic_lights:
         
-        simulator.start_loop(verbose=False)
-
-
-
+        finishing_times = simulate_sol(traffic_lights, config)
+        res.append(finishing_times)
+    
     return res
 
 

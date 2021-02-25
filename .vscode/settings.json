@@ -5,12 +5,14 @@
         ],
     "python.envFile": "${workspaceFolder}/.env",
     "terminal.integrated.inheritEnv": true,
-    "python.pythonPath": ".venv/bin/python",
     "terminal.integrated.env.linux": {
         "PYTHONPATH": "${workspaceFolder}",
         "LD_LIBRARY_PATH": "/is/sg2/mvlastelica/.mujoco/mujoco200_linux/bin"
     },
     "python.formatting.provider": "black",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}"
+    ],
 
 
 }

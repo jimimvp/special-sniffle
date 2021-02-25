@@ -27,8 +27,10 @@ for _, intersection in world.intersections.items():
 simulator = Simulator(config=config,
                       world=world)
 
-print('done')
-# simulator.start_loop()
+for street in world.streets.values():
+    street.step()
+
+simulator.start_loop(verbose=True)
 
 
 

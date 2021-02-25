@@ -19,6 +19,7 @@ traffic_lights = np.random.randint(0, 10, solution_dim)
 i = 0
 for _, intersection in world.intersections.items():
     intersection.traffic_lights = traffic_lights[i:i+len(intersection.in_streets)]
+    i+=len(intersection.in_streets)
 
 
 

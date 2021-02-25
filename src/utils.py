@@ -18,6 +18,24 @@ Street = namedtuple("Street", field_names=["name", "intersection_start", "inters
 Car = namedtuple("Car", field_names=["total_route"])
 
 
+
+
+def submission_string(sol, world):
+    
+    solstr = []
+    solstr.append(f"{len(world.intersections)}")
+    i = 0
+    for k, intersection in world.intersections.items():
+        traffic_lights = list(map(lambda x: int(x), sol[i:i+len(intersection.in_streets)])) 
+        solstr.append(f"{k}\n{len(intersection.in_streets)}")
+        for s, t in zip(intersection.in_streets, traffic_lights):
+            solstr.append(f"{s.name} {max(int(t), 0)}")
+
+    return "\n".join(solstr)
+
+
+
+
 def load_data(file):
 
     config = Config()

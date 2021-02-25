@@ -3,7 +3,7 @@ import os
 import numpy as np
 from jax import numpy as jnp
 import jax
-from ..simulator import World
+from ..simulator import World, Simulator
 
 
 def score_fn(finishing_times, config):
@@ -15,14 +15,28 @@ def score_fn(finishing_times, config):
     
     return score
 
+
+def simulate_sol(traffic_lights, config):
+    world = World(config=config)
+    simulator = Simulator(config=config, world=world)
+    i = 0
+    for _, intersection in world.intersections.items():
+        intersection.traffic_lights = traffic_lights[i:i+len(intersection.in_streets)]
+        i+=len(intersection.in_streets)
+    
+    simulator.start_loop(verbose=False)
+    
+
 def sample_trajectories(traffic_lights, config):
 
-    # TODO parallelize this
-    res = []
+
+
     for tf in traffic_lights:
-    
-        # ramdom results
-        res.append(np.random.randint(1, 10, np.random.randint(1, 10)))
+        
+        simulator.start_loop(verbose=False)
+
+
+
     return res
 
 

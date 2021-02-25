@@ -11,4 +11,5 @@ class Simulator:
     
         for t in tqdm.tqdm(range(self.config.simulation_duration)):
             self.world.step()
+
     

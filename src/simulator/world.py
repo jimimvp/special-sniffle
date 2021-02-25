@@ -39,6 +39,7 @@ class Intersection:
         car = street.queueing_cars.pop(0)
         car.cross_intersection()
 
+
         self.counter += 1
 
 class Car:

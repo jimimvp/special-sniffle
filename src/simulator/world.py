@@ -5,20 +5,20 @@ class Street:
         self.intersection_end = intersection_end
         self.T = T
         self.cars = []
+        self.traveling_cars = []
+        self.queueing_cars = [] # FIFO
+    
+    def step(self):
+        for car in self.traveling_cars:
+            self.remaining_traveling_time -= 1
+            if car.remaining_traveling_time == 0:
+                self.traveling_cars.remove(car)
+                self.queueing_cars.append(car)
 
-    @property
-    def has_cars(self):
-        return len(self.cars) > 0
-
-    def add_car(self, car):
-        self.cars.append(car)
-
-    def remove_car(self, car):
-        self.cars.remove(car)
-
-    def get_car_position(self, car):
-        self.cars.index(car)
-
+        if self.intersection_end.traffic_light[self.name] is True:
+            car = self.queueing_cars.pop(0)
+            car.cross_intersection()
+            
 class Intersection:
     def __init__(self, *, id):
         self.identifier = id
@@ -31,10 +31,15 @@ class Car:
         self.current_street = []
         self.total_route = total_route
         self.remaining_route = []
+        self.remaining_traveling_time = 1
 
-    def move(self):
-        if self.current_street.get_car_position(self) == 0:
+    def cross_intersection(self):
+        next_street = self.remaining_route.pop(0)
 
+        self.current_street = next_street
+        self.remaining_traveling_time = next_street.T
+
+        next_street.traveling_cars.append(self)
 
 class World:
     def __init__(self, *, config):

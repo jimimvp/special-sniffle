@@ -10,7 +10,7 @@ class Simulator:
     def start_loop(self, verbose=False):
     
         for t in tqdm.tqdm(range(self.config.simulation_duration)):
-            self.world.step()
+            self.world.step(t )
 
             if verbose:
                 self.world.print_state()

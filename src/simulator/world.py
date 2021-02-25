@@ -11,7 +11,7 @@ class Street:
         self.traveling_cars = []
         self.queueing_cars = [] # FIFO
     
-    def step(self):
+    def step(self, t):
         for car in self.traveling_cars:
             car.remaining_traveling_time -= 1
             if car.remaining_traveling_time == 0:
@@ -29,7 +29,7 @@ class Intersection:
         self.counter = 0
 
 
-    def step(self):
+    def step(self, t):
 
         assert len(self.traffic_lights) == len(self.in_streets)        
         if self.counter == self.traffic_lights[self.curr_green]:
@@ -105,12 +105,12 @@ class World:
                     
             self.cars[id] = car
 
-    def step(self):
+    def step(self, t):
         for street in self.streets.values():
-            street.step()
+            street.step(t)
 
         for intersection in self.intersections.values():
-            intersection.step()
+            intersection.step(t)
 
     def print_state(self):
         for intersection_id, intersection in self.intersections.items():

@@ -3,7 +3,7 @@ import os
 import numpy as np
 from jax import numpy as jnp
 import jax
-    
+from ..simulator import World
 
 
 def score_fn(finishing_times, config):
@@ -97,6 +97,8 @@ def cem_improved(key, config, p, d, K, num_elites=10, mu = None,
         mu = jnp.mean(elites, axis=0)
         std = jnp.std(elites, axis=0)
 
-    return mu, std, sampling_f(elites[0][0])
+        print(elites)
+
+    return mu, std, sampling_f(elites[0])
 
 

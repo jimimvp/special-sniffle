@@ -41,4 +41,3 @@ def load_data(file):
             config.cars.append(Car(lines[i].strip().split(" ")[1:]))
 
     return config
-

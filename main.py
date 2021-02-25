@@ -1,5 +1,5 @@
 from src.funcs import *
-from src.utils import load_data
+from src.utils import load_data, submission_string
 from src.simulator import Simulator
 from src.simulator import World
 from src.opt.cem import cem_improved
@@ -9,6 +9,8 @@ import jax
 
 
 file = "./datasets/a.txt"
+problem = file.split("/")[-1]
+
 config = load_data(file)
 
 world = World(config=config)
@@ -33,4 +35,11 @@ key = jax.random.PRNGKey(seed)
 key, _ = jax.random.split(key)
 
 d = sum([len(intersection.in_streets) for _, intersection in world.intersections.items()])
-mu, std, sol = cem_improved(key, config, 100, d, 7, num_elites=10, max_keep_elites=10)
+mu, std, sol = cem_improved(key, config, 100, d, 7, num_elites=10, max_keep_elites=10, act_high=10*np.ones(d), act_low=np.zeros(d))
+
+print("Here is the solution:", sol)
+
+
+solstr = submission_string(sol, world)
+with open(f"./solutions/solution_{problem}", "w") as f:
+    f.write(solstr)

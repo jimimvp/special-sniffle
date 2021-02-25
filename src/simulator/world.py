@@ -24,6 +24,28 @@ class Intersection:
         self.identifier = id
         self.in_streets = []
         self.out_streets = []
+        
+        self.traffic_lights = []
+        self.curr_green = 0
+        self.counter = 0
+
+
+    def step(self):
+
+        assert len(self.traffic_lights) == len(self.in_streets)
+        
+        if self.counter == self.traffic_lights[self.curr_green]:
+            #  swith traffic light
+            self.curr_green = (self.curr_green+1)%len(self.in_streets)
+
+        # let car out
+        car = self.in_streets[self.curr_green].pop()
+        self.in_streets.step()
+        
+        if car.remaining_route:
+            car.current_street = car.remaining_route.pop(0)
+
+
 
 class Car:
     def __init__(self, *, identifier, total_route):

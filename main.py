@@ -23,12 +23,7 @@ for _, intersection in world.intersections.items():
 
 simulator = Simulator(config=config,
                       world=world)
-
-for street in world.streets.values():
-    street.step()
-
 simulator.start_loop(verbose=True)
-
 
 # run CEM optimization
 
@@ -39,9 +34,3 @@ key, _ = jax.random.split(key)
 
 d = sum([len(intersection.in_streets) for _, intersection in world.intersections.items()])
 mu, std, sol = cem_improved(key, config, 100, d, 7, num_elites=10, max_keep_elites=10)
-
-
-
-
-
-world = World(config=config)

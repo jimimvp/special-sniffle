@@ -118,7 +118,7 @@ class World:
             print(' In Streets')
             for i, street in enumerate(intersection.in_streets):
                 print('  ', end='')
-                if intersection.traffic_lights[i]:
+                if intersection.curr_green == [i]:
                     print('[Green] ', end='')
                 else:
                     print('[Red] ', end='')

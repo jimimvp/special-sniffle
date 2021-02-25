@@ -25,7 +25,7 @@ def load_data(file):
     with open(file, "r") as f:
         lines = f.readlines()
         
-        config.simulation_time, config.num_intersections, config.num_streets, config.num_cars, config.car_score = list(map(lambda x: int(x), lines[0].strip().split(" ")))
+        config.simulation_duration, config.num_intersections, config.num_streets, config.num_cars, config.car_score = list(map(lambda x: int(x), lines[0].strip().split(" ")))
         config.streets = []
 
         lines = lines[1:]

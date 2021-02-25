@@ -30,8 +30,8 @@ def simulate_sol(traffic_lights, config):
     for car in world.cars:
         if car.done:
             finishing_times.append(car.finish_time)
-
-
+    
+    return list(finishing_times)
 
 def sample_trajectories(traffic_lights, config):
 
@@ -39,10 +39,11 @@ def sample_trajectories(traffic_lights, config):
     res = []
     for tf in traffic_lights:
         
-        finishing_times = simulate_sol(traffic_lights, config)
+        finishing_times = simulate_sol(tf, config)
         res.append(finishing_times)
     
-    return res
+
+    return np.array(res, dtype=np.object)
 
 
 
@@ -95,7 +96,9 @@ def cem_improved(key, config, p, d, K, num_elites=10, mu = None,
 
             #print(prev_elites.shape, prev_elite_returns.shape, prev_elite_states.shape, prev_elite_next_obs.shape, prev_elite_costs.shape)
             actions = jnp.vstack([actions, prev_elites])
-            finishing_times = np.hstack([finishing_times, prev_finishing_times])
+
+
+            finishing_times = np.concatenate([finishing_times, prev_finishing_times])
 
 
 

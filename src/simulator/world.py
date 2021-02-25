@@ -1,3 +1,5 @@
+import numpy as np
+
 from os import sched_setscheduler
 
 
@@ -17,6 +19,7 @@ class Street:
             if car.remaining_traveling_time == 0:
                 self.traveling_cars.remove(car)
                 self.queueing_cars.append(car)
+                car.just_arrived_at_intersection = True
 
 class Intersection:
     def __init__(self, *, id):
@@ -26,25 +29,34 @@ class Intersection:
         
         self.traffic_lights = []
         self.curr_green = 0
-        self.counter = 0
+        self.inner_counter = 0
 
 
     def step(self, t):
 
         assert len(self.traffic_lights) == len(self.in_streets)        
-        if self.counter == self.traffic_lights[self.curr_green]:
-            #  swith traffic light
-            self.curr_green = (self.curr_green+1)%len(self.in_streets)
-            self.counter = 0
+        if np.all(self.traffic_lights == 0):
+            self.curr_green = -1
+
+            return
+
+        while self.traffic_lights[self.curr_green] == 0:
+            self.curr_green = (self.curr_green + 1) % len(self.traffic_lights)
+        if self.traffic_lights[self.curr_green] == self.inner_counter:
+            self.curr_green = (self.curr_green + 1) % len(self.traffic_lights)
+            self.inner_counter = 0
 
         # let car out
         street = self.in_streets[self.curr_green]
         if street.queueing_cars:
-            car = street.queueing_cars.pop(0)
-            car.cross_intersection()
+            if street.queueing_cars[0].just_arrived_at_intersection:
+                street.queueing_cars[0].just_arrived_at_intersection = False
+            else:
+                car = street.queueing_cars.pop(0)
+                car.cross_intersection()
 
 
-        self.counter += 1
+        self.inner_counter += 1
 
 class Car:
     def __init__(self, *, identifier, total_route):
@@ -52,9 +64,10 @@ class Car:
         self.current_street = total_route[0]
         self.total_route = total_route
         self.remaining_route = total_route[1:]
-        self.remaining_traveling_time = 1
+        self.remaining_traveling_time = 0
+        self.just_arrived_at_intersection = False
 
-        self.current_street.traveling_cars.append(self)
+        self.current_street.queueing_cars.append(self)
 
         self.done = False
 
@@ -118,7 +131,7 @@ class World:
             print(' In Streets')
             for i, street in enumerate(intersection.in_streets):
                 print('  ', end='')
-                if intersection.curr_green == [i]:
+                if intersection.curr_green == i:
                     print('[Green] ', end='')
                 else:
                     print('[Red] ', end='')

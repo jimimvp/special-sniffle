@@ -17,7 +17,9 @@ world = World(config=config)
 world.build()
 
 d = sum([len(intersection.in_streets) for _, intersection in world.intersections.items()])
-traffic_lights = np.random.randint(0, 10, d)
+traffic_lights = np.zeros(d)
+traffic_lights[1] = 1
+traffic_lights[2] = 2
 i = 0
 for _, intersection in world.intersections.items():
     intersection.traffic_lights = traffic_lights[i:i+len(intersection.in_streets)]
